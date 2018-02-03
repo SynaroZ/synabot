@@ -1,0 +1,21 @@
+const Discord = require("discord.js")
+
+module.exports.run = async (bot, message, args) => {
+  let helpEmbed = new Discord.RichEmbed()
+  .setDescription("~Help~")
+  .setColor("#202529")
+  .addField("Profile", "See your and other (soon) profiles!")
+  .addField("BotInfo", "Bot Information!")
+  .addField("Server Info", "Information for the serveur!")
+  .addField("Reports", "Report other players and he will get a ban!")
+  .addField("Moderation Command:")
+  .addField("Kick", "Kick other players!")
+  .addField("TempMute", "Mute other players for a short or long time!")
+  .addField("Ban", "For the evil players!");
+
+  return message.channel.send(helpEmbed);
+}
+
+module.exports.help = {
+  name: "help"
+}

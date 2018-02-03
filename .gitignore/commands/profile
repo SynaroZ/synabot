@@ -1,0 +1,33 @@
+const Discord = require("discord.js")
+
+module.exports.run = async (bot, message, args) => {
+
+  if(args.length >= 1)
+  {
+    let pUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+    if(!pUser) return message.channel.send("Couldn't find user.");
+    let picon = pUser.user.displayAvatarURL;
+    let profilembed = new Discord.RichEmbed()
+    .setDescription("Profile")
+    .setColor("#202529")
+    .setThumbnail(picon)
+    .addField("Name", pUser)
+    .addField("Joined At", pUser.joinedAt);
+
+    return message.channel.send(profilembed);
+  }
+
+  let picon = message.author.displayAvatarURL;
+  let profilembed = new Discord.RichEmbed()
+  .setDescription("Profile")
+  .setColor("#202529")
+  .setThumbnail(picon)
+  .addField("Name", message.author.username)
+  .addField("Joined At", message.member.joinedAt);
+
+  return message.channel.send(profilembed);
+}
+
+module.exports.help = {
+  name: "profile"
+}

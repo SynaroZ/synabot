@@ -1,0 +1,47 @@
+const Discord = require("discord.js");
+const ms = require("ms");
+
+module.exports.run = async (bot, message, args) => {
+
+  let toMute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+  if(!toMute) return message.channel.send("Couldn't find user.");
+  let muteReason = args.join(" ").slice(22);
+  if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("You cant do that!");
+  if(toMute.hasPermission("ADMINISTRATOR")) return message.reply("That person cant be muted!");
+  let muteRole = message.guild.roles.find(`name`, "muted");
+  if(!muteRole)
+  {
+    try{
+      muteRole = await message.guild.createRole({
+        name: "muted",
+        color: "#000000",
+        permission: []
+      })
+      message.guild.channels.forEach(async (channel, id) => {
+        await channel.overwritePermissions(muteRole, {
+          SEND_MESSAGES: false,
+          ADD_REACTION: false
+        });
+      });
+    }catch(e)
+    {
+      console.log(e.stack);
+    }
+  }
+
+  let mutetime = args[1];
+
+  if(!mutetime) return message.reply("You didn't specify a time!");
+
+  await(toMute.addRole(muteRole.id));
+  message.reply(`${toMute} has been muted for ${ms(ms(mutetime))}`);
+
+  setTimeout(function(){
+    toMute.removeRole(muteRole.id);
+    message.channel.send(`${toMute} has been unmuted!`);
+  }, ms(mutetime));
+}
+
+module.exports.help = {
+  name: "tempmute"
+}
